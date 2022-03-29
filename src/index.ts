@@ -1,27 +1,13 @@
-import fs from 'fs';
+import { MatchReader } from "./MatchReader";
+import { Summary } from "./Summary";
 
+const matchReader = MatchReader.fromCsv('football.csv');
+matchReader.load();
 
-//get data 
-const matches = fs.readFileSync('./football.csv',{encoding:'utf-8'}).split('\n').map((row:string):string[]=>{
-    return row.split(',')});
+//analyze and report data
+// const summary = new Summary(new WinsAnalysis('Man United'),new HtmlReport());
+// summary.buildAndPrintReport(matchReader.matches);
 
-//use enum to define finite number of options
-enum MatchResult{
-	HomeWin = 'H',
-	AwayWin = 'A',
-	Draw = 'D'
-};
-
-//analyze data
-
-//how many times Man United won the match?
-let manUnitedWins = 0;
-for(let match of matches){
-    if(match[1]==='Man United'&& match[5]===MatchResult.HomeWin){
-        manUnitedWins++;
-    } else if(match[2]==='Man United' && match[5]===MatchResult.AwayWin){
-        manUnitedWins++;
-    }
-}
-//Report data
-console.log(`Manchester United won ${manUnitedWins} times.`)
+//with use of static method in Summary
+const summary = Summary.winsAnalysisWithHtmlReport('Man United');
+summary.buildAndPrintReport(matchReader.matches);

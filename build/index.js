@@ -1,31 +1,12 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs_1 = __importDefault(require("fs"));
-//get data 
-const matches = fs_1.default.readFileSync('./football.csv', { encoding: 'utf-8' }).split('\n').map((row) => {
-    return row.split(',');
-});
-//use enum to define finite number of options
-var MatchResult;
-(function (MatchResult) {
-    MatchResult["HomeWin"] = "H";
-    MatchResult["AwayWin"] = "A";
-    MatchResult["Draw"] = "D";
-})(MatchResult || (MatchResult = {}));
-;
-//analyze data
-//how many times Man United won the match?
-let manUnitedWins = 0;
-for (let match of matches) {
-    if (match[1] === 'Man United' && match[5] === MatchResult.HomeWin) {
-        manUnitedWins++;
-    }
-    else if (match[2] === 'Man United' && match[5] === MatchResult.AwayWin) {
-        manUnitedWins++;
-    }
-}
-//Report data
-console.log(`Manchester United won ${manUnitedWins} times.`);
+const MatchReader_1 = require("./MatchReader");
+const Summary_1 = require("./Summary");
+const matchReader = MatchReader_1.MatchReader.fromCsv('football.csv');
+matchReader.load();
+//analyze and report data
+// const summary = new Summary(new WinsAnalysis('Man United'),new HtmlReport());
+// summary.buildAndPrintReport(matchReader.matches);
+//with use of static method in Summary
+const summary = Summary_1.Summary.winsAnalysisWithHtmlReport('Man United');
+summary.buildAndPrintReport(matchReader.matches);
